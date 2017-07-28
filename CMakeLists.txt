@@ -7,10 +7,12 @@ enable_testing()
 add_subdirectory(deps/googletest)
 include_directories(deps/googletest/googletest/include)
 include_directories(deps/googletest/googlemock/include)
+include_directories(src)
 
 
-set(SOURCE_FILES src/InventoryManager.cpp src/InventoryManager.h test/test_main.cpp src/CharacterManager.cpp src/CharacterManager.h)
+set(SOURCE_FILES src/InventoryManager.cpp src/InventoryManager.h src/CharacterManager.cpp src/CharacterManager.h)
 
 add_executable(Iris ${SOURCE_FILES} main.cpp)
 add_library(Iris_Libs ${SOURCE_FILES} main.cpp)
-add_executable(Iris_Tests ${Source_FILES} test/test_main.cpp)
+add_executable(Iris_Tests ${Source_FILES} test/CharacterManagerTest.cpp deps/googletest/googletest/src/gtest_main.cc)
+target_link_libraries(Iris_Tests gtest)
