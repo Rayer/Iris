@@ -3,6 +3,12 @@ project(Iris)
 
 set(CMAKE_CXX_STANDARD 11)
 enable_testing()
+option(GRAPHIC_CLIENT "Build graphic client" OFF)
+
+if(GRAPHIC_CLIENT)
+    execute_process(COMMAND 'git submodule update cocos2d-x' .)
+    add_subdirectory(deps/cocos2d-x)
+endif(GRAPHIC_CLIENT)
 
 add_subdirectory(deps/googletest)
 include_directories(deps/googletest/googletest/include)
