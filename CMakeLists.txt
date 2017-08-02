@@ -3,6 +3,7 @@ project(Iris)
 
 set(CMAKE_CXX_STANDARD 11)
 enable_testing()
+# Not yet implemented
 option(GRAPHIC_CLIENT "Build graphic client" OFF)
 
 if(GRAPHIC_CLIENT)
