@@ -11,10 +11,10 @@
 
 class SimpleDevDB : public DataPersistenceLayer {
 protected:
-    std::map<std::string, SimpleDevDBSpace*> space_map;
+    std::map<std::string, std::shared_ptr<Space>> space_map;
 public:
-    SimpleDevDBSpace *get_space(const std::string &&name) override;
-    SimpleDevDBSpace *get_space(long id) override;
+    std::shared_ptr<Space> get_space(const std::string &&name) override;
+    std::shared_ptr<Space> get_space(long id) override;
 
     SimpleDevDB() = default;
     ~SimpleDevDB() = default;

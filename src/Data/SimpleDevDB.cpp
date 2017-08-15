@@ -4,17 +4,17 @@
 
 #include "SimpleDevDB.h"
 
-SimpleDevDBSpace *SimpleDevDB::get_space(const std::string &&name) {
+std::shared_ptr<Space> SimpleDevDB::get_space(const std::string &&name) {
     auto iter = space_map.find(name);
     if(iter != space_map.end())
         return iter->second;
 
-    SimpleDevDBSpace* space = new SimpleDevDBSpace();
+    std::shared_ptr<Space> space = std::make_shared<SimpleDevDBSpace>();
     space_map.insert(std::make_pair(name, space));
     return space;
 }
 
-SimpleDevDBSpace *SimpleDevDB::get_space(long id) {
+std::shared_ptr<Space> SimpleDevDB::get_space(long id) {
     return nullptr;
 }
 
