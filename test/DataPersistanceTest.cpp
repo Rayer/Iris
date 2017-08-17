@@ -13,8 +13,8 @@ class SimpleDevDB_Test : public ::testing::Test {
 protected:
     DataPersistenceLayer* db;
 
+
     void SetUp() override {
-        //std::cout << "Setup()" << std::endl;
         db = DataPersistenceManager::getInstance();
     }
 
