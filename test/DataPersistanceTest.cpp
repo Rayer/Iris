@@ -4,8 +4,9 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <memory>
 #include <Data/SimpleDevDB.h>
+#include <Data/DataPersistenceManager.h>
+#include <iostream>
 
 class SimpleDevDB_Test : public ::testing::Test {
 
@@ -13,11 +14,14 @@ protected:
     DataPersistenceLayer* db;
 
     void SetUp() override {
-        db = new SimpleDevDB();
+        //std::cout << "Setup()" << std::endl;
+        db = DataPersistenceManager::getInstance();
     }
 
     void TearDown() override {
-        delete db;
+        //std::cout << "TearDown()" << std::endl;
+        //Don't delete because it is singleton
+        //delete db;
     }
 
 };
@@ -29,8 +33,23 @@ TEST_F(SimpleDevDB_Test, SpaceAccessTest) {
     ASSERT_EQ(space->get_value("aaa"), "1234");
 }
 
-TEST_F(SimpleDevDB_Test, SpaceAccessTest2) {
-    std::shared_ptr<Space> space = db->get_space("ABC123");
+TEST_F(SimpleDevDB_Test, SpaceAccessReferenceTest) {
+    std::shared_ptr<Space> space = db->get_space("AAA");
     space->set_value("aaa", "1234");
-    ASSERT_EQ(space->get_value("aaa"), "1234");
+    std::shared_ptr<Space> space2 = db->get_space("AAA");
+    ASSERT_EQ(space2->get_value("aaa"), "1234");
+}
+
+TEST_F(SimpleDevDB_Test, SpaceGetNilValueTest) {
+    std::shared_ptr<Space> space = db->get_space("Test1");
+    ASSERT_ANY_THROW(space->get_value("AAA"));
+}
+
+TEST_F(SimpleDevDB_Test, SpaceKeyRemovalTest) {
+
+}
+
+
+TEST_F(SimpleDevDB_Test, SpaceRedefineKeyValueTest) {
+
 }
