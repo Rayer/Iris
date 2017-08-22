@@ -37,7 +37,12 @@ set(LIBS
         src/Data/DataPersistenceManager.cpp
         src/Data/DataPersistenceManager.h)
 
+set(TEST_FILES
+        test/CharacterManagerTest.cpp
+        test/DataPersistanceTest.cpp
+        test/ItemTest.cpp)
+
 add_executable(Iris ${LIBS} main.cpp)
 add_library(Iris_Libs ${LIBS} main.cpp)
-add_executable(Iris_Tests test/CharacterManagerTest.cpp deps/googletest/googletest/src/gtest_main.cc test/DataPersistanceTest.cpp)
+add_executable(Iris_Tests deps/googletest/googletest/src/gtest_main.cc ${TEST_FILES})
 target_link_libraries(Iris_Tests gtest Iris_Libs)
