@@ -3,6 +3,12 @@ project(Iris)
 
 set(CMAKE_CXX_STANDARD 11)
 enable_testing()
+
+# Boost dependency
+# P.S. std::variant requires C++17, use boost::variant instead
+FIND_PACKAGE( Boost REQUIRED )
+INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
+
 # Not yet implemented
 option(GRAPHIC_CLIENT "Build graphic client" OFF)
 

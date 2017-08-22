@@ -4,10 +4,10 @@
 
 #include "SimpleDevDBSpace.h"
 
-std::string SimpleDevDBSpace::get_value(const std::string &&key) {
+SimpleDevDBSpace::ValueType SimpleDevDBSpace::get_value(const std::string &&key) {
     return map.at(key);
 }
 
-void SimpleDevDBSpace::set_value(const std::string &&key, std::string value) {
+void SimpleDevDBSpace::set_value(const std::string &&key, ValueType value) {
     map.insert(std::make_pair(key, value));
 }

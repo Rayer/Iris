@@ -29,14 +29,16 @@ protected:
 TEST_F(SimpleDevDB_Test, SpaceAccessTest) {
     std::shared_ptr<Space> space = db->get_space("ABC123");
     space->set_value("aaa", "1234");
-    ASSERT_EQ(space->get_value("aaa"), "1234");
+    EXPECT_EQ(boost::get<std::string>(space->get_value("aaa")), "1234");
+    space->set_value("bbb", 1234);
+    EXPECT_EQ(boost::get<int>(space->get_value("bbb")), 1234);
 }
 
 TEST_F(SimpleDevDB_Test, SpaceAccessReferenceTest) {
     std::shared_ptr<Space> space = db->get_space("AAA");
     space->set_value("aaa", "1234");
     std::shared_ptr<Space> space2 = db->get_space("AAA");
-    ASSERT_EQ(space2->get_value("aaa"), "1234");
+    ASSERT_EQ(boost::get<std::string>(space2->get_value("aaa")), "1234");
 }
 
 TEST_F(SimpleDevDB_Test, SpaceGetNilValueTest) {
