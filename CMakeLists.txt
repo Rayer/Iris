@@ -17,7 +17,7 @@ include_directories(deps/googletest/googlemock/include)
 include_directories(src)
 
 
-set(SOURCE_FILES
+set(LIBS
         src/InventoryManager.cpp
         src/InventoryManager.h
         src/CharacterManager.cpp
@@ -31,7 +31,7 @@ set(SOURCE_FILES
         src/Data/DataPersistenceManager.cpp
         src/Data/DataPersistenceManager.h)
 
-add_executable(Iris ${SOURCE_FILES} main.cpp)
-add_library(Iris_Libs ${SOURCE_FILES} main.cpp)
+add_executable(Iris ${LIBS} main.cpp)
+add_library(Iris_Libs ${LIBS} main.cpp)
 add_executable(Iris_Tests test/CharacterManagerTest.cpp deps/googletest/googletest/src/gtest_main.cc test/DataPersistanceTest.cpp)
 target_link_libraries(Iris_Tests gtest Iris_Libs)
