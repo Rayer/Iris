@@ -6,7 +6,6 @@
 #include <gmock/gmock.h>
 #include <Data/SimpleDevDB.h>
 #include <Data/DataPersistenceManager.h>
-#include <iostream>
 
 class SimpleDevDB_Test : public ::testing::Test {
 

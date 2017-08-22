@@ -7,6 +7,9 @@
 
 class DataPersistenceLayer;
 
+/**
+ * Data Persistence Selector, will deliver different DPL implementation by compiling time
+ */
 class DataPersistenceManager {
 private:
     static DataPersistenceLayer* dataPersistenceLayer;

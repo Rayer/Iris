@@ -9,6 +9,9 @@
 #include "Space.h"
 #include <map>
 
+/**
+ * DPL Space for development
+ */
 class SimpleDevDBSpace : public Space {
 private:
     std::map<std::string, std::string> map;

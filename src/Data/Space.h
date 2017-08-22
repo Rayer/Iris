@@ -8,7 +8,9 @@
 
 #include <string>
 
-
+/**
+ * Space (Namespace) interface for DPL
+ */
 class Space {
 public:
 

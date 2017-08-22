@@ -9,6 +9,9 @@
 #include "DataPersistenceLayer.h"
 #include "SimpleDevDBSpace.h"
 
+/**
+ * DPL Implementation for development
+ */
 class SimpleDevDB : public DataPersistenceLayer {
 protected:
     std::map<std::string, std::shared_ptr<Space>> space_map;

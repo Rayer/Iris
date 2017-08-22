@@ -6,6 +6,7 @@
 #include "SimpleDevDB.h"
 
 
+
 DataPersistenceLayer* DataPersistenceManager::dataPersistenceLayer = nullptr;
 //TODO: Add pre-compiler to determine debug and release for different instance....or load from file.
 DataPersistenceLayer *DataPersistenceManager::getInstance() {
