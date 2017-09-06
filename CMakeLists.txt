@@ -6,7 +6,7 @@ enable_testing()
 
 # Boost dependency
 # P.S. std::variant requires C++17, use boost::variant instead
-FIND_PACKAGE( Boost REQUIRED )
+FIND_PACKAGE( Boost REQUIRED serialization filesystem )
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 # Not yet implemented
@@ -42,7 +42,9 @@ set(TEST_FILES
         test/DataPersistanceTest.cpp
         test/ItemTest.cpp)
 
-add_executable(Iris ${LIBS} main.cpp)
-add_library(Iris_Libs ${LIBS} main.cpp)
+message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
+
+# add_executable(Iris ${LIBS} main.cpp)
+add_library(Iris_Libs ${LIBS})
 add_executable(Iris_Tests deps/googletest/googletest/src/gtest_main.cc ${TEST_FILES})
-target_link_libraries(Iris_Tests gtest Iris_Libs)
+target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} )

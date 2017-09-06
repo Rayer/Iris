@@ -3,6 +3,12 @@
 //
 
 #include "SimpleDevDBSpace.h"
+#include <sstream>
+#include <iostream>
+#include <boost/serialization/variant.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
+#include <fstream>
 
 SimpleDevDBSpace::ValueType SimpleDevDBSpace::get_value(const std::string &&key) {
     return map.at(key);
@@ -10,4 +16,18 @@ SimpleDevDBSpace::ValueType SimpleDevDBSpace::get_value(const std::string &&key)
 
 void SimpleDevDBSpace::set_value(const std::string &&key, ValueType value) {
     map.insert(std::make_pair(key, value));
+}
+
+void SimpleDevDBSpace::serialize(std::string fullPath) {
+    std::ofstream ofs(fullPath);
+    boost::archive::text_oarchive ar(ofs);
+    ar << map;
+    ofs.close();
+}
+
+void SimpleDevDBSpace::deserialize(std::string fullPath) {
+    std::ifstream ifs(fullPath);
+    boost::archive::text_iarchive ar(ifs);
+    ar >> map;
+    ifs.close();
 }

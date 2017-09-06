@@ -32,9 +32,16 @@ public:
     virtual std::shared_ptr<Space> get_space(long id) = 0;
 
     /**
+     * Wipe all data
+     */
+    virtual void wipe(bool force) = 0;
+
+    /**
      *
      */
     virtual ~DataPersistenceLayer() = default;
+
+
 };
 
 #endif //IRIS_DATAPERSISTENCELAYER_H

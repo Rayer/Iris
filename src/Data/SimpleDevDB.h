@@ -14,10 +14,15 @@
  */
 class SimpleDevDB : public DataPersistenceLayer {
 protected:
-    std::map<std::string, std::shared_ptr<Space>> space_map;
+    std::map<std::string, std::shared_ptr<SimpleDevDBSpace>> space_map;
+
 public:
+    void serialize(std::string folder = "/tmp");
+    void deserialize(std::string folder = "/tmp");
     std::shared_ptr<Space> get_space(const std::string &&name) override;
     std::shared_ptr<Space> get_space(long id) override;
+
+    void wipe(bool force) override;
 
     SimpleDevDB() = default;
     ~SimpleDevDB() = default;
