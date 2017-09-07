@@ -9,12 +9,14 @@
 #include <string>
 
 class CharInfo;
+
 class CharSpec;
 
 class CharacterManager {
 public:
-    std::shared_ptr<CharInfo*> get_main_char;
-    std::shared_ptr<CharInfo*> get_char_by_spec(const CharSpec& charSpec);
+    std::shared_ptr<CharInfo *> get_main_char;
+
+    std::shared_ptr<CharInfo *> get_char_by_spec(const CharSpec &charSpec);
 };
 
 

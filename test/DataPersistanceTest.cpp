@@ -7,10 +7,12 @@
 #include <Data/SimpleDevDB.h>
 #include <Data/DataPersistenceManager.h>
 
+using namespace Iris;
+
 class SimpleDevDB_Test : public ::testing::Test {
 
 protected:
-    DataPersistenceLayer* db;
+    DataPersistenceLayer *db;
 
 
     void SetUp() override {
@@ -62,7 +64,7 @@ TEST_F(SimpleDevDB_Test, SpaceSerializeTest) {
 }
 
 TEST_F(SimpleDevDB_Test, DBSerializeTest) {
-    SimpleDevDB* devDb = (SimpleDevDB*)db;
+    SimpleDevDB *devDb = (SimpleDevDB *) db;
     devDb->wipe(true);
     std::shared_ptr<Space> space1 = db->get_space("AAA");
     space1->set_value("aaa", "1234");

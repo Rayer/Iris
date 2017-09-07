@@ -10,6 +10,8 @@
 #include <boost/archive/text_iarchive.hpp>
 #include <fstream>
 
+using namespace Iris;
+
 SimpleDevDBSpace::ValueType SimpleDevDBSpace::get_value(const std::string &&key) {
     return map.at(key);
 }

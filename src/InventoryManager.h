@@ -12,7 +12,7 @@ class Character;
 
 class InventoryManager {
 public:
-    void get_inventory_by_char(const std::string& cid);
+    void get_inventory_by_char(const std::string &cid);
 
 };
 

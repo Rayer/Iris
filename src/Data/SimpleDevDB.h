@@ -13,21 +13,29 @@
 /**
  * DPL Implementation for development
  */
-class SimpleDevDB : public DataPersistenceLayer {
-protected:
-    std::map<std::string, std::shared_ptr<SimpleDevDBSpace>> space_map;
 
-public:
-    void serialize(std::string folder = boost::filesystem::complete(boost::filesystem::temp_directory_path()).generic_string());
-    void deserialize(std::string folder = boost::filesystem::complete(boost::filesystem::temp_directory_path()).generic_string());
-    std::shared_ptr<Space> get_space(const std::string &&name) override;
-    std::shared_ptr<Space> get_space(long id) override;
+namespace Iris {
+    class SimpleDevDB : public DataPersistenceLayer {
+    protected:
+        std::map<std::string, std::shared_ptr<SimpleDevDBSpace>> space_map;
 
-    void wipe(bool force) override;
+    public:
+        void serialize(std::string folder = boost::filesystem::complete(
+                boost::filesystem::temp_directory_path()).generic_string());
 
-    SimpleDevDB() = default;
-    ~SimpleDevDB() = default;
-};
+        void deserialize(std::string folder = boost::filesystem::complete(
+                boost::filesystem::temp_directory_path()).generic_string());
 
+        std::shared_ptr<Space> get_space(const std::string &&name) override;
 
+        std::shared_ptr<Space> get_space(long id) override;
+
+        void wipe(bool force) override;
+
+        SimpleDevDB() = default;
+
+        ~SimpleDevDB() = default;
+    };
+
+}
 #endif //IRIS_SIMPLEDEVDB_H

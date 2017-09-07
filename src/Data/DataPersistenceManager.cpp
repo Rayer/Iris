@@ -5,13 +5,16 @@
 #include "DataPersistenceManager.h"
 #include "SimpleDevDB.h"
 
+using namespace Iris;
 
 
-DataPersistenceLayer* DataPersistenceManager::dataPersistenceLayer = nullptr;
+DataPersistenceLayer *DataPersistenceManager::dataPersistenceLayer = nullptr;
+
 //TODO: Add pre-compiler to determine debug and release for different instance....or load from file.
 DataPersistenceLayer *DataPersistenceManager::getInstance() {
-    if(dataPersistenceLayer == nullptr) {
+    if (dataPersistenceLayer == nullptr) {
         dataPersistenceLayer = new SimpleDevDB();
     }
     return dataPersistenceLayer;
 }
+
