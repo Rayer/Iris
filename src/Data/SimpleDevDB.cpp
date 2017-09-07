@@ -41,7 +41,7 @@ void SimpleDevDB::deserialize(std::string folder) {
     for(auto& file : list) {
         if(file.extension().generic_string() != ".sel") continue;
         std::shared_ptr<SimpleDevDBSpace> space = std::make_shared<SimpleDevDBSpace>();
-        space->deserialize(file.generic_path().generic_string());
+        space->deserialize(complete(file).generic_string());
         space_map.insert(std::make_pair(file.stem().generic_string(), space));
     }
 
