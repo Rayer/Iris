@@ -4,7 +4,6 @@
 
 #include <sstream>
 #include <boost/filesystem.hpp>
-#include <iostream>
 #include "SimpleDevDB.h"
 
 using namespace boost::filesystem;
@@ -28,7 +27,6 @@ void SimpleDevDB::serialize(std::string folder) {
         const std::string& space_name = iter.first;
         std::ostringstream ss;
         ss << folder << "/" << space_name << ".sel";
-        std::cout << "Serializing : " << ss.str() << std::endl;
         std::static_pointer_cast<SimpleDevDBSpace>(iter.second)->serialize(ss.str());
     }
 }
