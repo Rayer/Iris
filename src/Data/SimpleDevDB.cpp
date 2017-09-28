@@ -15,7 +15,7 @@ std::shared_ptr<Space> SimpleDevDB::get_space(const std::string &&name) {
         return iter->second;
 
     std::shared_ptr<SimpleDevDBSpace> space = std::make_shared<SimpleDevDBSpace>();
-    space_map.insert(std::make_pair(name, space));
+    space_map.insert({name, space});
     return space;
 }
 

@@ -17,7 +17,7 @@ SimpleDevDBSpace::ValueType SimpleDevDBSpace::get_value(const std::string &&key)
 }
 
 void SimpleDevDBSpace::set_value(const std::string &&key, ValueType value) {
-    map.insert(std::make_pair(key, value));
+    map.insert({key, value});
 }
 
 void SimpleDevDBSpace::serialize(std::string fullPath) {
