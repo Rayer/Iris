@@ -30,6 +30,7 @@ namespace Iris {
 
         std::shared_ptr<Space> get_space(long id) override;
 
+
         void wipe(bool force) override;
 
         SimpleDevDB() = default;

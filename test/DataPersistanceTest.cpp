@@ -17,6 +17,7 @@ protected:
 
     void SetUp() override {
         db = DataPersistenceManager::getInstance();
+        srand(time(0));
     }
 
     void TearDown() override {
@@ -25,6 +26,40 @@ protected:
         //delete db;
     }
 
+    std::string generateRandomString(int min, int max) {
+        static const char *rule = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        size_t rule_length = std::strlen(rule);
+        std::string ret;
+        int length = rand() % (max - min + 1);
+        for (int i = 0; i < length; ++i) ret += rule[rand() % rule_length];
+        return ret;
+    }
+
+
+    std::map<std::string, std::shared_ptr<Space>>
+    generateTestData(int space_count = 100, int space_size_min = 1, int space_size_max = 10) {
+        std::map<std::string, std::shared_ptr<Space>> ret;
+        for (int i = 0; i < space_count; i++) {
+            //Generate name
+            std::string name;
+            do {
+                name = generateRandomString(1, 16);
+                if (ret.find(name) != ret.end()) name = "";
+            } while (name == "");
+
+            std::shared_ptr<Space> space = std::make_shared<SimpleDevDBSpace>();
+            int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
+            for (int i = 0; i < space_size; ++i) {
+                if (rand() % 2)
+                    space->set_value(generateRandomString(1, 10), rand());
+                else
+                    space->set_value(generateRandomString(1, 10), generateRandomString(1, 16));
+            }
+
+            ret.insert({name, space});
+        }
+        return ret;
+    }
 };
 
 
@@ -87,6 +122,27 @@ TEST_F(SimpleDevDB_Test, DBSerializeTest) {
 }
 
 
-TEST_F(SimpleDevDB_Test, SpaceRedefineKeyValueTest) {
+TEST_F(SimpleDevDB_Test, SimpleDevDBPersistTest) {
+    SimpleDevDB *simpleDevDB = new SimpleDevDB();
+    std::map<std::string, std::shared_ptr<Space>> test_data_raw = generateTestData();
+
+    for (auto const &pair : test_data_raw) {
+        auto space = std::static_pointer_cast<SimpleDevDBSpace>(simpleDevDB->get_space(pair.first.c_str()));
+        auto keys = std::static_pointer_cast<SimpleDevDBSpace>(pair.second)->get_keys();
+        for (const std::string &name : keys) {
+            space->set_value(name.c_str(), pair.second->get_value(name.c_str()));
+        }
+    }
+
+    std::string folder = "/tmp/" + generateRandomString(5, 6);
+
+    //boost::filesystem::remove(folder);
+    simpleDevDB->serialize(folder);
+
+    delete simpleDevDB;
+
+    simpleDevDB = new SimpleDevDB();
+    simpleDevDB->deserialize(folder);
+
 
 }

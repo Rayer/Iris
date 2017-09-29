@@ -33,3 +33,11 @@ void SimpleDevDBSpace::deserialize(std::string fullPath) {
     ar >> map;
     ifs.close();
 }
+
+std::list<std::string> SimpleDevDBSpace::get_keys() {
+    std::list<std::string> ret;
+    for (auto const &pair : map) {
+        ret.push_back(pair.first);
+    }
+    return ret;
+}

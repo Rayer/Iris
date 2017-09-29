@@ -24,6 +24,8 @@ std::shared_ptr<Space> SimpleDevDB::get_space(long id) {
 }
 
 void SimpleDevDB::serialize(std::string folder) {
+    //Create folder if not exist
+    boost::filesystem::create_directory(folder);
     for (auto iter : space_map) {
         const std::string &space_name = iter.first;
         std::ostringstream ss;
@@ -51,6 +53,8 @@ void SimpleDevDB::deserialize(std::string folder) {
 void SimpleDevDB::wipe(bool force) {
     space_map.clear();
 }
+
+
 
 
 

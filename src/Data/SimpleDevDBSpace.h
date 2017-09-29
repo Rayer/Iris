@@ -10,6 +10,7 @@
 #include <map>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/map.hpp>
+#include <list>
 
 namespace Iris {
 /**
@@ -26,6 +27,8 @@ namespace Iris {
         void deserialize(std::string fullPath);
 
         ValueType get_value(const std::string &&key) override;
+
+        std::list<std::string> get_keys();
 
         void set_value(const std::string &&key, ValueType value) override;
     };
