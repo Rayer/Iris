@@ -12,12 +12,12 @@ using namespace Iris;
 class SimpleDevDB_Test : public ::testing::Test {
 
 protected:
-    DataPersistenceLayer *db;
+    DataPersistenceLayer *db = nullptr;
 
 
     void SetUp() override {
         db = DataPersistenceManager::getInstance();
-        srand(time(0));
+        srand((unsigned int) time(nullptr));
     }
 
     void TearDown() override {
@@ -26,11 +26,11 @@ protected:
         //delete db;
     }
 
-    std::string generateRandomString(int min, int max) {
+    std::string generateRandomString(int min = 1, int max = 10) {
         static const char *rule = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         size_t rule_length = std::strlen(rule);
         std::string ret;
-        int length = rand() % (max - min + 1);
+        int length = rand() % (max - min + 1) + min;
         for (int i = 0; i < length; ++i) ret += rule[rand() % rule_length];
         return ret;
     }
@@ -45,7 +45,7 @@ protected:
             do {
                 name = generateRandomString(1, 16);
                 if (ret.find(name) != ret.end()) name = "";
-            } while (name == "");
+            } while (name.empty());
 
             std::shared_ptr<Space> space = std::make_shared<SimpleDevDBSpace>();
             int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
@@ -136,7 +136,7 @@ TEST_F(SimpleDevDB_Test, SimpleDevDBPersistTest) {
 
     std::string folder = "/tmp/" + generateRandomString(5, 6);
 
-    //boost::filesystem::remove(folder);
+    boost::filesystem::remove(folder);
     simpleDevDB->serialize(folder);
 
     delete simpleDevDB;
