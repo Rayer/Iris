@@ -25,7 +25,7 @@ namespace Iris {
          * \param name : Space Name
          * \return Shared pointer of a single Space
          */
-        virtual std::shared_ptr<Space> get_space(const std::string &&name) = 0;
+        virtual std::shared_ptr<Space> get_space(const std::string &name) = 0;
 
         /**
          *

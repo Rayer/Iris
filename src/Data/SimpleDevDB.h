@@ -26,7 +26,7 @@ namespace Iris {
         void deserialize(std::string folder = boost::filesystem::complete(
                 boost::filesystem::temp_directory_path()).generic_string());
 
-        std::shared_ptr<Space> get_space(const std::string &&name) override;
+        std::shared_ptr<Space> get_space(const std::string &name) override;
 
         std::shared_ptr<Space> get_space(long id) override;
 
