@@ -9,7 +9,7 @@
 using namespace boost::filesystem;
 using namespace Iris;
 
-std::shared_ptr<Space> SimpleDevDB::get_space(const std::string &&name) {
+std::shared_ptr<Space> SimpleDevDB::get_space(const std::string &name) {
     auto iter = space_map.find(name);
     if (iter != space_map.end())
         return iter->second;

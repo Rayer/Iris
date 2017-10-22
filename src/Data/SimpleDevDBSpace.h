@@ -26,11 +26,11 @@ namespace Iris {
 
         void deserialize(std::string fullPath);
 
-        ValueType get_value(const std::string &&key) override;
+        ValueType get_value(const std::string &key) override;
 
         std::list<std::string> get_keys();
 
-        void set_value(const std::string &&key, ValueType value) override;
+        void set_value(const std::string &key, const ValueType &value) override;
     };
 
 }
