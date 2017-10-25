@@ -6,7 +6,7 @@ enable_testing()
 
 # Boost dependency
 # P.S. std::variant requires C++17, use boost::variant instead
-FIND_PACKAGE( Boost REQUIRED serialization filesystem )
+FIND_PACKAGE( Boost REQUIRED serialization filesystem log )
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 # Not yet implemented
@@ -24,10 +24,6 @@ include_directories(src)
 
 
 set(LIBS
-        src/InventoryManager.cpp
-        src/InventoryManager.h
-        src/CharacterManager.cpp
-        src/CharacterManager.h
         src/Data/DataPersistenceLayer.h
         src/Data/SimpleDevDB.cpp
         src/Data/SimpleDevDB.h
@@ -35,7 +31,7 @@ set(LIBS
         src/Data/SimpleDevDBSpace.cpp
         src/Data/SimpleDevDBSpace.h
         src/Data/DataPersistenceManager.cpp
-        src/Data/DataPersistenceManager.h)
+        src/Data/DataPersistenceManager.h src/Utils/Logger.cpp src/Utils/Logger.h)
 
 set(TEST_FILES
         test/CharacterManagerTest.cpp
