@@ -9,6 +9,7 @@
 #include <Main/MoManager.h>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <utility>
 #include <Main/Context.h>
 
 using namespace Iris;
@@ -19,7 +20,7 @@ class TemplateModule : public Loopable {
     boost::uuids::uuid m_tag;
     std::string m_name;
 public:
-    TemplateModule(std::string name) : m_name(name), m_tag(boost::uuids::nil_uuid()) {
+    explicit TemplateModule(std::string name) : m_name(std::move(name)), m_tag(boost::uuids::nil_uuid()) {
     }
 
     void update(double delta, Context *context) override {
