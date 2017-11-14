@@ -9,6 +9,7 @@
 #include <Main/MoManager.h>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
+#include <Main/Context.h>
 
 using namespace Iris;
 
@@ -64,6 +65,8 @@ TEST(LoopSystemTest, Reg_Remove_Module_Test) {
     clazz1 = new TemplateModule("TestModule1");
     clazz2 = new TemplateModule("TestModule2");
 
+    Context* context = new Context();
+
     update_count = 0;
 
     typedef boost::uuids::uuid UUID;
@@ -72,17 +75,17 @@ TEST(LoopSystemTest, Reg_Remove_Module_Test) {
     UUID u1 = ml->register_module(clazz1);
     UUID u2 = ml->register_module(clazz2);
 
-    ml->update(0, nullptr);
+    ml->update(0, context);
 
     EXPECT_EQ(update_count, 2);
 
     ml->remove_module(u2);
-    ml->update(0, nullptr);
+    ml->update(0, context);
 
     EXPECT_EQ(update_count, 3);
 
     ml->remove_module(u1);
-    ml->update(0, nullptr);
+    ml->update(0, context);
     EXPECT_EQ(update_count, 3);
 
     delete ml;
