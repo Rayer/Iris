@@ -6,7 +6,7 @@ enable_testing()
 
 # Boost dependency
 # P.S. std::variant requires C++17, use boost::variant instead
-FIND_PACKAGE( Boost REQUIRED serialization filesystem )
+FIND_PACKAGE(Boost REQUIRED serialization filesystem system)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 # Not yet implemented
@@ -24,10 +24,6 @@ include_directories(src)
 
 
 set(LIBS
-        src/InventoryManager.cpp
-        src/InventoryManager.h
-        src/CharacterManager.cpp
-        src/CharacterManager.h
         src/Data/DataPersistenceLayer.h
         src/Data/SimpleDevDB.cpp
         src/Data/SimpleDevDB.h
@@ -35,12 +31,22 @@ set(LIBS
         src/Data/SimpleDevDBSpace.cpp
         src/Data/SimpleDevDBSpace.h
         src/Data/DataPersistenceManager.cpp
-        src/Data/DataPersistenceManager.h)
+        src/Data/DataPersistenceManager.h
+        src/Main/Context.cpp
+        src/Main/Context.h
+        src/Main/GameMain.cpp
+        src/Main/GameMain.h
+        src/Main/Iris_State.h
+        src/Main/MoManager.cpp
+        src/Main/MoManager.h
+        src/Main/MoMLayer.h
+        src/Main/Loopable.h
+        src/Main/IDModule.h)
 
 set(TEST_FILES
         test/CharacterManagerTest.cpp
         test/DataPersistanceTest.cpp
-        test/ItemTest.cpp)
+        test/ItemTest.cpp test/LoopSystemTest.cpp)
 
 message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
 
