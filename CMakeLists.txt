@@ -41,7 +41,12 @@ set(LIBS
         src/Main/MoManager.h
         src/Main/MoMLayer.h
         src/Main/Loopable.h
-        src/Main/IDModule.h)
+        src/Main/IDModule.h )
+
+set(TClientLibs
+        src/TClient/TClient.cpp
+        src/TClient/TClient.h
+        src/TClient/TClientMain.cpp)
 
 set(TEST_FILES
         test/CharacterManagerTest.cpp
@@ -50,7 +55,9 @@ set(TEST_FILES
 
 message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
 
-# add_executable(Iris ${LIBS} main.cpp)
 add_library(Iris_Libs ${LIBS})
+add_library(TClient_Libs ${TClientLibs})
 add_executable(Iris_Tests deps/googletest/googletest/src/gtest_main.cc ${TEST_FILES})
 target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} )
+add_executable(TClient src/TClient/TClientMain.cpp)
+target_link_libraries(TClient TClient_Libs Iris_Libs)
