@@ -12,6 +12,7 @@
 Iris::TClient::TClient() {
     context = std::make_shared<Context>();
     modules = std::make_shared<MoManager>();
+    
 }
 
 void Iris::TClient::start() {
@@ -31,11 +32,11 @@ void Iris::TClient::print_status() {
 std::string Iris::TClient::fetch_next_command() {
     std::string buffer;
     std::cout << "Input command : " << std::endl;
-    std::cin >> buffer;
+    getline(std::cin, buffer);
     return buffer;
 }
 
-void Iris::TClient::parse_next_command(const std::string cmd) {
+void Iris::TClient::parse_next_command(const std::string& cmd) {
     std::cout << "Next command is : " << cmd << std::endl;
 }
 

@@ -19,7 +19,7 @@ namespace Iris {
 
         void print_status();
         std::string fetch_next_command();
-        void parse_next_command(const std::string);
+        void parse_next_command(const std::string& cmd);
     public:
         TClient();
         void start();
