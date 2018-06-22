@@ -4,7 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <Data/SimpleDevDB.h>
+#include <Data/SimpleKVDevDB.h>
 #include <Data/DataPersistenceManager.h>
 
 using namespace Iris;
@@ -12,7 +12,7 @@ using namespace Iris;
 class SimpleDevDB_Test : public ::testing::Test {
 
 protected:
-    DataPersistenceLayer *db = nullptr;
+    KVDataPersistenceLayer *db = nullptr;
 
 
     void SetUp() override {
@@ -37,9 +37,9 @@ protected:
     }
 
 
-    std::map<std::string, std::shared_ptr<Space>>
+    std::map<std::string, std::shared_ptr<KVSpace>>
     generateTestData(int space_count = 100, int space_size_min = 1, int space_size_max = 10) {
-        std::map<std::string, std::shared_ptr<Space>> ret;
+        std::map<std::string, std::shared_ptr<KVSpace>> ret;
         for (int i = 0; i < space_count; i++) {
             //Generate name
             std::string name;
@@ -48,7 +48,7 @@ protected:
                 if (ret.find(name) != ret.end()) name = "";
             } while (name.empty());
 
-            std::shared_ptr<Space> space = std::make_shared<SimpleDevDBSpace>();
+            std::shared_ptr<KVSpace> space = std::make_shared<SimpleKVDevDBSpace>();
             int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
             for (int i = 0; i < space_size; ++i) {
                 if (rand() % 2)
@@ -70,7 +70,7 @@ TEST_F(SimpleDevDB_Test, SpaceAccessTest) {
     std::string KEY2 = generateRandomString(1, 10);
     std::string STR_VALUE = generateRandomString(5, 20);
     int INT_VALUE = rand();
-    std::shared_ptr<Space> space = db->get_space(SPACE_NAME);
+    std::shared_ptr<KVSpace> space = db->get_space(SPACE_NAME);
     space->set_value(KEY1, STR_VALUE);
     EXPECT_EQ(boost::get<std::string>(space->get_value(KEY1)), STR_VALUE);
     space->set_value(KEY2, INT_VALUE);
@@ -79,35 +79,35 @@ TEST_F(SimpleDevDB_Test, SpaceAccessTest) {
 
 TEST_F(SimpleDevDB_Test, SpaceAccessReferenceTest) {
     std::string space_name = generateRandomString();
-    std::shared_ptr<Space> space = db->get_space(space_name);
+    std::shared_ptr<KVSpace> space = db->get_space(space_name);
     std::string key = generateRandomString();
     std::string str_value = generateRandomString();
     space->set_value(key, str_value);
-    std::shared_ptr<Space> space2 = db->get_space(space_name);
+    std::shared_ptr<KVSpace> space2 = db->get_space(space_name);
     EXPECT_EQ(boost::get<std::string>(space2->get_value(key)), str_value);
 }
 
 TEST_F(SimpleDevDB_Test, SpaceGetNilValueTest) {
     std::string space_name = generateRandomString();
     std::string key = generateRandomString();
-    std::shared_ptr<Space> space = db->get_space(space_name);
+    std::shared_ptr<KVSpace> space = db->get_space(space_name);
     EXPECT_ANY_THROW(space->get_value(key));
 }
 
 
 TEST_F(SimpleDevDB_Test, SpaceSerializeTest) {
     std::string space_name = generateRandomString();
-    std::shared_ptr<Space> space1 = db->get_space(space_name);
+    std::shared_ptr<KVSpace> space1 = db->get_space(space_name);
     std::string key1 = generateRandomString();
     std::string value1 = generateRandomString();
     std::string key2 = generateRandomString();
     int value2 = rand();
     space1->set_value(key1, value1);
     space1->set_value(key2, value2);
-    std::static_pointer_cast<SimpleDevDBSpace>(space1)->serialize("/tmp/" + space_name + ".test");
+    std::static_pointer_cast<SimpleKVDevDBSpace>(space1)->serialize("/tmp/" + space_name + ".test");
 
-    std::shared_ptr<Space> space2 = db->get_space(generateRandomString());
-    std::static_pointer_cast<SimpleDevDBSpace>(space2)->deserialize("/tmp/" + space_name + ".test");
+    std::shared_ptr<KVSpace> space2 = db->get_space(generateRandomString());
+    std::static_pointer_cast<SimpleKVDevDBSpace>(space2)->deserialize("/tmp/" + space_name + ".test");
     EXPECT_EQ(boost::get<std::string>(space1->get_value(key1)), boost::get<std::string>(space2->get_value(key1)));
     EXPECT_EQ(boost::get<int>(space1->get_value(key2)), boost::get<int>(space2->get_value(key2)));
     EXPECT_EQ(boost::get<int>(space1->get_value(key2)), value2);
@@ -115,18 +115,18 @@ TEST_F(SimpleDevDB_Test, SpaceSerializeTest) {
 }
 
 TEST_F(SimpleDevDB_Test, DBSerializeTest) {
-    SimpleDevDB *devDb = (SimpleDevDB *) db;
+    SimpleKVDevDB *devDb = (SimpleKVDevDB *) db;
     devDb->wipe(true);
     std::string space_name1 = generateRandomString();
     std::string key1 = generateRandomString();
     std::string key2 = generateRandomString();
     std::string value1 = generateRandomString();
     int value2 = rand();
-    std::shared_ptr<Space> space1 = db->get_space(space_name1);
+    std::shared_ptr<KVSpace> space1 = db->get_space(space_name1);
     space1->set_value(key1, value1);
     space1->set_value(key2, value2);
     std::string space_name2 = generateRandomString();
-    std::shared_ptr<Space> space2 = db->get_space(space_name2);
+    std::shared_ptr<KVSpace> space2 = db->get_space(space_name2);
     std::string key3 = generateRandomString();
     std::string key4 = generateRandomString();
     std::string value3 = generateRandomString();
@@ -147,14 +147,14 @@ TEST_F(SimpleDevDB_Test, DBSerializeTest) {
     EXPECT_EQ(boost::get<int>(space2->get_value(key4)), value4);
 }
 
-
+//TODO: This test case yet have any ASSERT!
 TEST_F(SimpleDevDB_Test, SimpleDevDBPersistTest) {
-    SimpleDevDB *simpleDevDB = new SimpleDevDB();
-    std::map<std::string, std::shared_ptr<Space>> test_data_raw = generateTestData();
+    SimpleKVDevDB *simpleDevDB = new SimpleKVDevDB();
+    std::map<std::string, std::shared_ptr<KVSpace>> test_data_raw = generateTestData();
 
     for (auto const &pair : test_data_raw) {
-        auto space = std::static_pointer_cast<SimpleDevDBSpace>(simpleDevDB->get_space(pair.first));
-        auto keys = std::static_pointer_cast<SimpleDevDBSpace>(pair.second)->get_keys();
+        auto space = std::static_pointer_cast<SimpleKVDevDBSpace>(simpleDevDB->get_space(pair.first));
+        auto keys = std::static_pointer_cast<SimpleKVDevDBSpace>(pair.second)->get_keys();
         for (const std::string &name : keys) {
             space->set_value(name, pair.second->get_value(name));
         }
@@ -169,7 +169,7 @@ TEST_F(SimpleDevDB_Test, SimpleDevDBPersistTest) {
 
     delete simpleDevDB;
 
-    simpleDevDB = new SimpleDevDB();
+    simpleDevDB = new SimpleKVDevDB();
     simpleDevDB->deserialize(folder);
 
 

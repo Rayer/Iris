@@ -13,13 +13,18 @@ namespace Iris {
 /**
  * Space (Namespace) interface for DPL
  */
-    class Space {
+    class KVSpace {
     public:
         typedef boost::variant<std::string, double, int> ValueType;
 
         virtual ValueType get_value(const std::string &key) = 0;
 
         virtual void set_value(const std::string &key, const ValueType &value) = 0;
+
+        virtual bool remove(const std::string &key) = 0;
+
+        virtual void wipe() = 0;
+
 
     };
 }

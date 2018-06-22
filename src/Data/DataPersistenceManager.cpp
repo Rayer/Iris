@@ -3,17 +3,17 @@
 //
 
 #include "DataPersistenceManager.h"
-#include "SimpleDevDB.h"
+#include "SimpleKVDevDB.h"
 
 using namespace Iris;
 
 
-DataPersistenceLayer *DataPersistenceManager::dataPersistenceLayer = nullptr;
+KVDataPersistenceLayer *DataPersistenceManager::dataPersistenceLayer = nullptr;
 
 //TODO: Add pre-compiler to determine debug and release for different instance....or load from file.
-DataPersistenceLayer *DataPersistenceManager::getInstance() {
+KVDataPersistenceLayer *DataPersistenceManager::getInstance() {
     if (dataPersistenceLayer == nullptr) {
-        dataPersistenceLayer = new SimpleDevDB();
+        dataPersistenceLayer = new SimpleKVDevDB();
     }
     return dataPersistenceLayer;
 }

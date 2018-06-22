@@ -6,7 +6,7 @@
 #define IRIS_SIMPLEDEVDBSPACE_H
 
 
-#include "Space.h"
+#include "KVSpace.h"
 #include <map>
 #include <boost/serialization/access.hpp>
 #include <boost/serialization/map.hpp>
@@ -16,7 +16,7 @@ namespace Iris {
 /**
  * DPL Space for development
  */
-    class SimpleDevDBSpace : public Space {
+    class SimpleKVDevDBSpace : public KVSpace {
 
     private:
         std::map<std::string, ValueType> map;
@@ -31,6 +31,10 @@ namespace Iris {
         std::list<std::string> get_keys();
 
         void set_value(const std::string &key, const ValueType &value) override;
+
+        bool remove(const std::string &key) override;
+
+        void wipe() override;
     };
 
 }

@@ -7,19 +7,19 @@
 
 namespace Iris {
 
-    class DataPersistenceLayer;
+    class KVDataPersistenceLayer;
 
 /**
  * Data Persistence Selector, will deliver different DPL implementation by compiling time
  */
     class DataPersistenceManager {
     private:
-        static DataPersistenceLayer *dataPersistenceLayer;
+        static KVDataPersistenceLayer *dataPersistenceLayer;
 
         DataPersistenceManager() = default;
 
     public:
-        static DataPersistenceLayer *getInstance();
+        static KVDataPersistenceLayer *getInstance();
 
     };
 }

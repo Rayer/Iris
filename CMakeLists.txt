@@ -20,16 +20,22 @@ endif(GRAPHIC_CLIENT)
 add_subdirectory(deps/googletest)
 include_directories(deps/googletest/googletest/include)
 include_directories(deps/googletest/googlemock/include)
+include_directories(deps/mariadbpp/include)
 include_directories(src)
+
+set(GTEST_SRC_DIR deps/googletest/googletest)
+
+add_subdirectory(deps/mariadbpp)
+add_subdirectory(deps/mariadb-connector-c)
 
 
 set(LIBS
-        src/Data/DataPersistenceLayer.h
-        src/Data/SimpleDevDB.cpp
-        src/Data/SimpleDevDB.h
-        src/Data/Space.h
-        src/Data/SimpleDevDBSpace.cpp
-        src/Data/SimpleDevDBSpace.h
+        src/Data/KVDataPersistenceLayer.h
+        src/Data/SimpleKVDevDB.cpp
+        src/Data/SimpleKVDevDB.h
+        src/Data/KVSpace.h
+        src/Data/SimpleKVDevDBSpace.cpp
+        src/Data/SimpleKVDevDBSpace.h
         src/Data/DataPersistenceManager.cpp
         src/Data/DataPersistenceManager.h
         src/Main/Context.cpp
@@ -41,16 +47,16 @@ set(LIBS
         src/Main/MoManager.h
         src/Main/MoMLayer.h
         src/Main/Loopable.h
-        src/Main/IDModule.h)
+        src/Main/IDModule.h src/Data/SqlKVDatabase.cpp src/Data/SqlKVDatabase.h src/Data/SqlKVDatabaseSpace.cpp src/Data/SqlKVDatabaseSpace.h src/Exceptions/DPLException.cpp src/Exceptions/DPLException.h src/Exceptions/SqlException.cpp src/Exceptions/SqlException.h)
 
 set(TEST_FILES
         test/CharacterManagerTest.cpp
-        test/DataPersistanceTest.cpp
-        test/ItemTest.cpp test/LoopSystemTest.cpp)
+        test/SimpleKVDevDBTest.cpp
+        test/ItemTest.cpp test/LoopSystemTest.cpp test/SqlKVDatabaseTest.cpp)
 
-message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
+# message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
 
 # add_executable(Iris ${LIBS} main.cpp)
 add_library(Iris_Libs ${LIBS})
 add_executable(Iris_Tests deps/googletest/googletest/src/gtest_main.cc ${TEST_FILES})
-target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} )
+target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} mariadbclientpp mariadbclient)

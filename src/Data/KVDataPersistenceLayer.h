@@ -7,7 +7,7 @@
 
 #include <string>
 #include <memory>
-#include "Space.h"
+#include "KVSpace.h"
 
 namespace Iris {
 
@@ -16,23 +16,16 @@ namespace Iris {
  * This is data persistance interface.
  * \author : Rayer
  */
-    class DataPersistenceLayer {
+    class KVDataPersistenceLayer {
     public:
-        DataPersistenceLayer() = default;
+        KVDataPersistenceLayer() = default;
 
         /**
          * Get Space(namespace)
          * \param name : Space Name
          * \return Shared pointer of a single Space
          */
-        virtual std::shared_ptr<Space> get_space(const std::string &name) = 0;
-
-        /**
-         *
-         * @param id Space UUID
-         * @return Shared pointer of a single Space
-         */
-        virtual std::shared_ptr<Space> get_space(long id) = 0;
+        virtual std::shared_ptr<KVSpace> get_space(const std::string &name) = 0;
 
         /**
          * Wipe all data
@@ -42,7 +35,7 @@ namespace Iris {
         /**
          *
          */
-        virtual ~DataPersistenceLayer() = default;
+        virtual ~KVDataPersistenceLayer() = default;
 
 
     };

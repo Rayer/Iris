@@ -6,8 +6,8 @@
 #define IRIS_SIMPLEDEVDB_H
 
 
-#include "DataPersistenceLayer.h"
-#include "SimpleDevDBSpace.h"
+#include "KVDataPersistenceLayer.h"
+#include "SimpleKVDevDBSpace.h"
 #include <boost/filesystem.hpp>
 
 /**
@@ -15,9 +15,9 @@
  */
 
 namespace Iris {
-    class SimpleDevDB : public DataPersistenceLayer {
+    class SimpleKVDevDB : public KVDataPersistenceLayer {
     protected:
-        std::map<std::string, std::shared_ptr<SimpleDevDBSpace>> space_map;
+        std::map<std::string, std::shared_ptr<SimpleKVDevDBSpace>> space_map;
 
     public:
         void serialize(std::string folder = boost::filesystem::complete(
@@ -26,16 +26,13 @@ namespace Iris {
         void deserialize(std::string folder = boost::filesystem::complete(
                 boost::filesystem::temp_directory_path()).generic_string());
 
-        std::shared_ptr<Space> get_space(const std::string &name) override;
-
-        std::shared_ptr<Space> get_space(long id) override;
-
+        std::shared_ptr<KVSpace> get_space(const std::string &name) override;
 
         void wipe(bool force) override;
 
-        SimpleDevDB() = default;
+        SimpleKVDevDB() = default;
 
-        ~SimpleDevDB() = default;
+        ~SimpleKVDevDB() = default;
     };
 
 }
