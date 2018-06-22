@@ -15,11 +15,14 @@ class SqlKVDatabase_Test : public ::testing::Test {
 protected:
     KVDataPersistenceLayer *db = nullptr;
 
-
-    void SetUp() override {
+    SqlKVDatabase_Test() {
         db = new SqlKVDatabase("localhost", "iris", "iris", "iris_test");
         srand((unsigned int) time(nullptr));
         db->wipe(true);
+    }
+
+    void SetUp() override {
+
     }
 
     void TearDown() override {
