@@ -13,7 +13,6 @@ namespace Iris {
     private:
         std::map<std::string, ValueType> map;
         std::string space_name;
-        mariadb::result_set_ref cached_context;
         mariadb::connection_ref sql_connect;
     public:
         SqlKVDatabaseSpace(const std::string &name, mariadb::connection_ref conn);

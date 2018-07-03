@@ -4,9 +4,10 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <Data/SimpleKVDevDB.h>
 #include <Data/DataPersistenceManager.h>
 #include <Data/SqlKVDatabase.h>
+#include <list>
+#include <map>
 
 using namespace Iris;
 
@@ -14,6 +15,10 @@ class SqlKVDatabase_Test : public ::testing::Test {
 
 protected:
     KVDataPersistenceLayer *db = nullptr;
+    //This map stores all record that DB operates, used to verdict correct answer.
+    typedef std::map<std::string, KVSpace::ValueType> SpaceSpec;
+    typedef std::map<std::string, SpaceSpec> DBSpec;
+    DBSpec cache; //This cache is used in stress test case
 
     SqlKVDatabase_Test() {
         db = new SqlKVDatabase("localhost", "iris", "iris", "iris_test");
@@ -40,30 +45,28 @@ protected:
         return ret;
     }
 
+    void generateStressTestData(KVDataPersistenceLayer* dpl, int space_count = 100, int space_size_min = 1, int space_size_max = 10) {
 
-    std::map<std::string, std::shared_ptr<KVSpace>>
-    generateTestData(int space_count = 100, int space_size_min = 1, int space_size_max = 10) {
-        std::map<std::string, std::shared_ptr<KVSpace>> ret;
-        for (int i = 0; i < space_count; i++) {
-            //Generate name
-            std::string name;
-            do {
-                name = generateRandomString(1, 16);
-                if (ret.find(name) != ret.end()) name = "";
-            } while (name.empty());
+        cache.clear();
 
-            std::shared_ptr<KVSpace> space = std::make_shared<SimpleKVDevDBSpace>();
-            int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
-            for (int i = 0; i < space_size; ++i) {
-                if (rand() % 2)
-                    space->set_value(generateRandomString(1, 10), rand());
-                else
-                    space->set_value(generateRandomString(1, 10), generateRandomString(1, 16));
+        std::map<std::string, std::shared_ptr<KVSpace> > spaceList;
+        for(int i = 0; i < space_count; ++i) {
+            std::string space_name = generateRandomString(1, 16);
+            spaceList.insert(std::make_pair(space_name, dpl->get_space(space_name)));
+            //cache[space_name] = SpaceSpec{};
+
+            for(std::pair<std::string, std::shared_ptr<KVSpace> > pair : spaceList) {
+                int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
+                for(int j = 0; j < space_size; ++j) {
+                    std::string column_name = generateRandomString(1, 10);
+                    KVSpace::ValueType value = (rand() % 2) ? (KVSpace::ValueType)rand() : (KVSpace::ValueType)generateRandomString(1, 16);
+                    cache[pair.first].insert(std::make_pair(column_name, value));
+                    pair.second->set_value(column_name, value);
+                }
+
             }
 
-            ret.insert({name, space});
         }
-        return ret;
     }
 };
 
@@ -98,83 +101,6 @@ TEST_F(SqlKVDatabase_Test, SpaceGetNilValueTest) {
     EXPECT_ANY_THROW(space->get_value(key));
 }
 
-//
-//TEST_F(SqlKVDatabase_Test, SpaceSerializeTest) {
-//    std::string space_name = generateRandomString();
-//    std::shared_ptr<KVSpace> space1 = db->get_space(space_name);
-//    std::string key1 = generateRandomString();
-//    std::string value1 = generateRandomString();
-//    std::string key2 = generateRandomString();
-//    int value2 = rand();
-//    space1->set_value(key1, value1);
-//    space1->set_value(key2, value2);
-//    std::static_pointer_cast<SimpleKVDevDBSpace>(space1)->serialize("/tmp/" + space_name + ".test");
-//
-//    std::shared_ptr<KVSpace> space2 = db->get_space(generateRandomString());
-//    std::static_pointer_cast<SimpleKVDevDBSpace>(space2)->deserialize("/tmp/" + space_name + ".test");
-//    EXPECT_EQ(boost::get<std::string>(space1->get_value(key1)), boost::get<std::string>(space2->get_value(key1)));
-//    EXPECT_EQ(boost::get<int>(space1->get_value(key2)), boost::get<int>(space2->get_value(key2)));
-//    EXPECT_EQ(boost::get<int>(space1->get_value(key2)), value2);
-//
-//}
-//
-//TEST_F(SqlKVDatabase_Test, DBSerializeTest) {
-//    SimpleKVDevDB *devDb = (SimpleKVDevDB *) db;
-//    devDb->wipe(true);
-//    std::string space_name1 = generateRandomString();
-//    std::string key1 = generateRandomString();
-//    std::string key2 = generateRandomString();
-//    std::string value1 = generateRandomString();
-//    int value2 = rand();
-//    std::shared_ptr<KVSpace> space1 = db->get_space(space_name1);
-//    space1->set_value(key1, value1);
-//    space1->set_value(key2, value2);
-//    std::string space_name2 = generateRandomString();
-//    std::shared_ptr<KVSpace> space2 = db->get_space(space_name2);
-//    std::string key3 = generateRandomString();
-//    std::string key4 = generateRandomString();
-//    std::string value3 = generateRandomString();
-//    int value4 = rand();
-//    space2->set_value(key3, value3);
-//    space2->set_value(key4, value4);
-//
-//    devDb->serialize("/tmp");
-//    devDb->wipe(true);
-//    ASSERT_ANY_THROW(space1->get_value("AAA"));
-//
-//    devDb->deserialize("/tmp");
-//    space1 = db->get_space(space_name1);
-//    EXPECT_EQ(boost::get<std::string>(space1->get_value(key1)), value1);
-//    EXPECT_EQ(boost::get<int>(space1->get_value(key2)), value2);
-//    space2 = db->get_space(space_name2);
-//    EXPECT_EQ(boost::get<std::string>(space2->get_value(key3)), value3);
-//    EXPECT_EQ(boost::get<int>(space2->get_value(key4)), value4);
-//}
-
-//
-//TEST_F(SqlKVDatabase_Test, SimpleDevDBPersistTest) {
-//    SimpleKVDevDB *simpleDevDB = new SimpleKVDevDB();
-//    std::map<std::string, std::shared_ptr<KVSpace>> test_data_raw = generateTestData();
-//
-//    for (auto const &pair : test_data_raw) {
-//        auto space = std::static_pointer_cast<SimpleKVDevDBSpace>(simpleDevDB->get_space(pair.first));
-//        auto keys = std::static_pointer_cast<SimpleKVDevDBSpace>(pair.second)->get_keys();
-//        for (const std::string &name : keys) {
-//            space->set_value(name, pair.second->get_value(name));
-//        }
-//    }
-//
-//    //std::string folder = "/tmp/" + generateRandomString(5, 6);
-//    std::string folder = boost::filesystem::complete(boost::filesystem::temp_directory_path()).generic_string() +
-//                         generateRandomString(5, 6);
-//
-//    boost::filesystem::remove(folder);
-//    simpleDevDB->serialize(folder);
-//
-//    delete simpleDevDB;
-//
-//    simpleDevDB = new SimpleKVDevDB();
-//    simpleDevDB->deserialize(folder);
-//
-//
-//}
+TEST_F(SqlKVDatabase_Test, StressTest) {
+    generateStressTestData(db);
+}

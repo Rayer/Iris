@@ -24,6 +24,8 @@ namespace Iris {
         std::shared_ptr<KVSpace> get_space(const std::string &name) override;
         void wipe(bool force) override;
     };
+
+
 }
 
 
