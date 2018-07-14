@@ -45,7 +45,7 @@ Iris::KVSpace::ValueType Iris::SqlKVDatabaseSpace::get_value(const std::string &
 void Iris::SqlKVDatabaseSpace::set_value(const std::string &key, const Iris::KVSpace::ValueType &value) {
 
     //Use sql_string on demend....
-    std::string sql_string = (boost::format("select 1 from %1% where `key` = '%2%'") % space_name % key).str();
+    std::string sql_string = (boost::format("select 1 from %1% where `key` = '%2%';") % space_name % key).str();
     try {
         sql_connect->query(sql_string);
         bool update = 0 != sql_connect->query(sql_string)->row_count();
@@ -54,7 +54,7 @@ void Iris::SqlKVDatabaseSpace::set_value(const std::string &key, const Iris::KVS
         boost::archive::text_oarchive ar(blob);
         ar << value;
 
-        static boost::format update_string = boost::format("update %1% set `value` = '%3%' where `key` = '%2%';");
+        static boost::format update_string = boost::format("update `%1%` set `value` = '%3%' where `key` = '%2%';");
         static boost::format insert_string = boost::format("insert into `%1%` (`key`, `value`) values ('%2%','%3%');");
         sql_string = ((update ? update_string : insert_string) % space_name % key % blob.str()).str();
         if (!sql_connect->execute(sql_string)) throw SqlException{"set_value failed", sql_string, sql_connect->error()};

@@ -146,3 +146,6 @@ cmake-build-release/
 bin/
 docs/
 Model/
+deps/
+CMakeFiles/
+build/
