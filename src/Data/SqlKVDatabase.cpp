@@ -7,9 +7,11 @@
 #include <boost/format.hpp>
 #include <Exceptions/SqlException.h>
 #include <mariadb++/exceptions.hpp>
+#include "Utils/SqlCmd.h"
 
 using namespace Iris;
 using namespace mariadb;
+using namespace where_clause;
 
 std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
 
@@ -17,9 +19,12 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
     if (m_space_map.find(name) != m_space_map.end())
         return m_space_map[name];
 
-    std::string sql_string = (
-            boost::format("select 1 from information_schema.tables where table_schema='%1%' and table_name='%2%';") %
-            m_db % name).str();
+    //std::string sql_string = (
+    //        boost::format("select 1 from information_schema.tables where table_schema='%1%' and table_name='%2%';") %
+    //        m_db % name).str();
+    std::string sql_string = SqlQuery("information_schema.tables").addQuery("1").where(
+            Eq("table_schema", m_db) & Eq("table_name", name)).generate();
+
     try {
         result_set_ref result = m_con->query(sql_string);
 
@@ -50,9 +55,10 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
 
 void SqlKVDatabase::wipe(bool force) {
     //TODO: Dangerous operation, need a WARN log
-    std::string sql_String = (
-            boost::format("select TABLE_NAME from information_schema.tables where table_schema='%1%';") % m_db).str();
-
+    //std::string sql_String = (
+    //        boost::format("select TABLE_NAME from information_schema.tables where table_schema='%1%';") % m_db).str();
+    std::string sql_String = SqlQuery("information_schema.tables").addQuery("TABLE_NAME").where(
+            Eq("table_schema", m_db)).generate();
 
     result_set_ref result = m_con->query(sql_String);
 

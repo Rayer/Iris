@@ -9,12 +9,15 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <mariadb++/exceptions.hpp>
+#include "Utils/SqlCmd.h"
 
 using namespace mariadb;
+using namespace where_clause;
 
 Iris::KVSpace::ValueType Iris::SqlKVDatabaseSpace::get_value(const std::string &key) {
 
-    std::string sql_string = (boost::format("select `value` from %1% where `key`='%2%'") % space_name % key).str();
+    //std::string sql_string = (boost::format("select `value` from %1% where `key`='%2%'") % space_name % key).str();
+    std::string sql_string = SqlQuery(space_name).addQuery("`value`").where(Eq("`key`", key)).generate();
 
     try {
         result_set_ref result = sql_connect->query(sql_string);
@@ -45,7 +48,8 @@ Iris::KVSpace::ValueType Iris::SqlKVDatabaseSpace::get_value(const std::string &
 void Iris::SqlKVDatabaseSpace::set_value(const std::string &key, const Iris::KVSpace::ValueType &value) {
 
     //Use sql_string on demend....
-    std::string sql_string = (boost::format("select 1 from %1% where `key` = '%2%';") % space_name % key).str();
+    //std::string sql_string = (boost::format("select 1 from %1% where `key` = '%2%';") % space_name % key).str();
+    std::string sql_string = SqlQuery(space_name).addQuery("1").where(Eq("`key`", key)).generate();
     try {
         sql_connect->query(sql_string);
         bool update = 0 != sql_connect->query(sql_string)->row_count();
