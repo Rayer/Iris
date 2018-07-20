@@ -47,12 +47,12 @@ set(LIBS
         src/Main/MoManager.h
         src/Main/MoMLayer.h
         src/Main/Loopable.h
-        src/Main/IDModule.h src/Data/SqlKVDatabase.cpp src/Data/SqlKVDatabase.h src/Data/SqlKVDatabaseSpace.cpp src/Data/SqlKVDatabaseSpace.h src/Exceptions/DPLException.cpp src/Exceptions/DPLException.h src/Exceptions/SqlException.cpp src/Exceptions/SqlException.h)
+        src/Main/IDModule.h src/Data/SqlKVDatabase.cpp src/Data/SqlKVDatabase.h src/Data/SqlKVDatabaseSpace.cpp src/Data/SqlKVDatabaseSpace.h src/Exceptions/DPLException.cpp src/Exceptions/DPLException.h src/Exceptions/SqlException.cpp src/Exceptions/SqlException.h src/Utils/SqlCmd.cpp src/Utils/SqlCmd.h)
 
 set(TEST_FILES
         test/CharacterManagerTest.cpp
         test/SimpleKVDevDBTest.cpp
-        test/ItemTest.cpp test/LoopSystemTest.cpp test/SqlKVDatabaseTest.cpp)
+        test/ItemTest.cpp test/LoopSystemTest.cpp test/SqlKVDatabaseTest.cpp test/UtilSqlCmdTest.cpp)
 
 # message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
 
