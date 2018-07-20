@@ -15,8 +15,16 @@
 namespace where_clause {
     class Eq;
 
+    class Not;
     class And;
 
+    class Or;
+
+    class Like;
+
+    class Bracket;
+
+    class Parentheses;
     class Exp;
 }
 
@@ -60,7 +68,7 @@ public:
     */
     SqlQuery(const std::string &table);
 
-    ~SqlQuery(void) override;
+    ~SqlQuery(void) override = default;
 
     /**
     Add a query column. It works like SELECT "THIS" from "TABLE NAME"
@@ -112,10 +120,10 @@ SqlUpdate("TABLE_NAME").setValue("COLUMN1_INT", "123").setValue("COLUMN2_STR", "
 </code>
 */
 class SqlUpdate : public SqlCmd {
+protected:
     std::string m_tablename;
-    //std::map<std::string, std::string> m_keyValueMap;
-    //TODO: Support multiple set value, if possible. Currently only support single key-value pair
-    std::pair<std::string, std::string> m_kvPair;
+    typedef std::pair<std::string, std::string> KVPair;
+    std::list<KVPair> m_kvList;
     std::string m_whereString;
 
 public:
@@ -125,7 +133,7 @@ public:
     */
     SqlUpdate(const std::string &tablename);
 
-    ~SqlUpdate(void) override;
+    ~SqlUpdate(void) override = default;
 
     /**
     Set a value to a column.
@@ -133,6 +141,10 @@ public:
     \param value Value use to set to the column. Currently only string is supported because all use cases use string as value.
     */
     SqlUpdate &setValue(const std::string &key, const std::string &value);
+
+    SqlUpdate &setValue(const std::string &key, int value);
+
+    SqlUpdate &setValue(const std::string &key, double value);
 
     /**
     Where clause. This can consume "text" version of where clause, like "A='01' AND B='02'" as raw stream
@@ -158,6 +170,40 @@ public:
 
 };
 
+
+class SqlInsert : public SqlCmd {
+protected:
+    std::string m_tablename;
+    typedef std::pair<std::string, std::string> KVPair;
+    std::list<KVPair> m_kvList;
+
+public:
+    /**
+    Main Builder for Update
+    \param tablename Target table name
+    */
+    SqlInsert(const std::string &tablename);
+
+    ~SqlInsert(void) override = default;
+
+    /**
+    Set a value to a column.
+    \param key
+    \param value Value use to set to the column. Currently only string is supported because all use cases use string as value.
+    */
+    SqlInsert &insertValue(const std::string &key, const std::string &value);
+
+    SqlInsert &insertValue(const std::string &key, int value);
+
+    SqlInsert &insertValue(const std::string &key, double value);
+
+    /**
+    Generate SQL String.
+    \return Generated SQL String
+    */
+    std::string generate() override;
+
+};
 /**
 This is a helper class for generating where_clause.
 
@@ -205,6 +251,10 @@ namespace where_clause {
         \sa And
         */
         And operator&(const Exp &exp) const;
+
+        Or operator|(const Exp &exp) const;
+
+        Parentheses operator()(const Exp &exp) const;
     };
 
     /**
@@ -229,14 +279,29 @@ namespace where_clause {
         std::string m_val;
     public :
         ~Eq() override = default;
-
         Eq(const std::string &var, const std::string &val);
-
         Eq(const std::string &var, int val);
-
         Eq(const std::string &var, double val);
+        std::string str() const override;
+    };
+
+    /**
+     * Express "<>", NOT
+     */
+    class Not : public Exp {
+        std::string m_var;
+        std::string m_val;
+    public:
+        ~Not() override = default;
+
+        Not(const std::string &var, const std::string &val);
+
+        Not(const std::string &var, int val);
+
+        Not(const std::string &var, double val);
 
         std::string str() const override;
+
     };
 
     /**
@@ -251,6 +316,32 @@ namespace where_clause {
         //And(const std::list<Exp>& exp);
         std::string str() const override;
     };
+
+
+//    /**
+//     * Express "Or", usually we can use operator| instead
+//     */
+//
+//     class Or : public Exp {
+//         const Exp &m_lhs;
+//         const Exp &m_rhs;
+//     public:
+//         Or(const Exp &, const Exp &);
+//         std::string str() const override;
+//     };
+//
+//     /**
+//      * Express "Parentheses", usually we can use operator() instead
+//      */
+//
+//     class Parentheses : public Exp {
+//         const Exp &m_lhs;
+//         const Exp &m_rhs;
+//     public:
+//         Parentheses(const Exp&, const Exp&);
+//         std::string str() const override;
+//     };
+//
 
 }
 

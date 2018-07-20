@@ -58,9 +58,14 @@ void Iris::SqlKVDatabaseSpace::set_value(const std::string &key, const Iris::KVS
         boost::archive::text_oarchive ar(blob);
         ar << value;
 
-        static boost::format update_string = boost::format("update `%1%` set `value` = '%3%' where `key` = '%2%';");
-        static boost::format insert_string = boost::format("insert into `%1%` (`key`, `value`) values ('%2%','%3%');");
-        sql_string = ((update ? update_string : insert_string) % space_name % key % blob.str()).str();
+        //static boost::format update_string = boost::format("update `%1%` set `value` = '%3%' where `key` = '%2%';");
+        //static boost::format insert_string = boost::format("insert into `%1%` (`key`, `value`) values ('%2%','%3%');");
+        //sql_string = ((update ? update_string : insert_string) % space_name % key % blob.str()).str();
+        if (update) {
+            sql_string = SqlUpdate(space_name).setValue("`value`", blob.str()).where(Eq("`key`", key)).generate();
+        } else {
+            sql_string = SqlInsert(space_name).insertValue("`key`", key).insertValue("`value`", blob.str()).generate();
+        }
         if (!sql_connect->execute(sql_string)) throw SqlException{"set_value failed", sql_string, sql_connect->error()};
     } catch(mariadb::exception::base& ex) {
 
