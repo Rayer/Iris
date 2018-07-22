@@ -21,6 +21,7 @@ protected:
     typedef std::map<std::string, SpaceSpec> DBSpec;
     DBSpec cache; //This cache is used in stress test case
     MasterLogger *logger;
+    int stress_iteration;
 
     SqlKVDatabase_Test() {
         db = new SqlKVDatabase(TestConfig::Hostname, TestConfig::User, TestConfig::Password, TestConfig::Database,
@@ -28,6 +29,7 @@ protected:
         srand((unsigned int) time(nullptr));
         db->wipe(true);
         logger = MasterLogger::getLogger();
+        stress_iteration = TestConfig::StressIteration;
     }
 
     void SetUp() override {
@@ -107,5 +109,5 @@ TEST_F(SqlKVDatabase_Test, SpaceGetNilValueTest) {
 }
 
 TEST_F(SqlKVDatabase_Test, StressTest) {
-    generateStressTestData(db);
+    generateStressTestData(db, stress_iteration);
 }

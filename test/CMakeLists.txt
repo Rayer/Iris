@@ -4,7 +4,7 @@ set(TEST_UNIXSOCKET "" CACHE STRING "Unix socket for database")
 set(TEST_USERNAME "iris" CACHE STRING "User name for database")
 set(TEST_PASSWORD "iris" CACHE STRING "Password for this account")
 set(TEST_DATABASE "iris_test" CACHE STRING "Target schema/database")
-set(TEST_DB_KEY_SIZE 512 CACHE INTEGER "value for create table column size")
+set(TEST_STRESS_ITERATION 100 CACHE INTEGER "Stress Iteration Number")
 
 configure_file(test_config.h.in test_config.h)
 
