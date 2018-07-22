@@ -6,7 +6,8 @@ enable_testing()
 
 # Boost dependency
 # P.S. std::variant requires C++17, use boost::variant instead
-FIND_PACKAGE(Boost REQUIRED serialization filesystem system)
+
+FIND_PACKAGE(Boost REQUIRED serialization filesystem system log)
 INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 # Not yet implemented
@@ -37,6 +38,7 @@ set(LIBS
         src/Data/SimpleKVDevDBSpace.cpp
         src/Data/SimpleKVDevDBSpace.h
         src/Data/DataPersistenceManager.cpp
+        src/Data/DataPersistenceManager.h src/Utils/Logger.cpp src/Utils/Logger.h
         src/Data/DataPersistenceManager.h
         src/Main/Context.cpp
         src/Main/Context.h
