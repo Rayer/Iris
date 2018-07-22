@@ -17,7 +17,8 @@ namespace Iris {
         std::map<std::string, std::shared_ptr<KVSpace> > m_space_map;
 
     public:
-        SqlKVDatabase(std::string host, std::string user, std::string pass, std::string database, long port = 3306);
+        SqlKVDatabase(const std::string &host, const std::string &user, const std::string &pass,
+                      const std::string &database, const std::string &unix_socket, long port);
 
         ~SqlKVDatabase() override;
 

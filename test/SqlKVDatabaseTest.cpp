@@ -4,11 +4,13 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <Data/DataPersistenceManager.h>
-#include <Data/SqlKVDatabase.h>
-#include <Logger/MasterLogger.h>
+#include "Data/DataPersistenceManager.h"
+#include "Data/SqlKVDatabase.h"
+#include "Logger/MasterLogger.h"
+#include "test_config.h"
 
 using namespace Iris;
+using namespace Iris::testing;
 
 class SqlKVDatabase_Test : public ::testing::Test {
 
@@ -21,7 +23,8 @@ protected:
     MasterLogger *logger;
 
     SqlKVDatabase_Test() {
-        db = new SqlKVDatabase("localhost", "iris", "iris", "iris_test");
+        db = new SqlKVDatabase(TestConfig::Hostname, TestConfig::User, TestConfig::Password, TestConfig::Database,
+                               TestConfig::UnixSocket, 0);
         srand((unsigned int) time(nullptr));
         db->wipe(true);
         logger = MasterLogger::getLogger();

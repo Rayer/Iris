@@ -19,6 +19,7 @@ if(GRAPHIC_CLIENT)
 endif(GRAPHIC_CLIENT)
 
 add_subdirectory(deps/googletest)
+add_subdirectory(test)
 include_directories(deps/googletest/googletest/include)
 include_directories(deps/googletest/googlemock/include)
 include_directories(deps/mariadbpp/include)
@@ -38,7 +39,7 @@ set(LIBS
         src/Data/SimpleKVDevDBSpace.cpp
         src/Data/SimpleKVDevDBSpace.h
         src/Data/DataPersistenceManager.cpp
-        src/Data/DataPersistenceManager.h src/Utils/Logger.cpp src/Utils/Logger.h
+        src/Data/DataPersistenceManager.h
         src/Data/DataPersistenceManager.h
         src/Main/Context.cpp
         src/Main/Context.h
@@ -51,14 +52,5 @@ set(LIBS
         src/Main/Loopable.h
         src/Main/IDModule.h src/Data/SqlKVDatabase.cpp src/Data/SqlKVDatabase.h src/Data/SqlKVDatabaseSpace.cpp src/Data/SqlKVDatabaseSpace.h src/Exceptions/DPLException.cpp src/Exceptions/DPLException.h src/Exceptions/SqlException.cpp src/Exceptions/SqlException.h src/Utils/SqlCmd.cpp src/Utils/SqlCmd.h src/Logger/ILogger.h src/Logger/MasterLogger.cpp src/Logger/MasterLogger.h src/Logger/SimpleConsoleLogger.cpp src/Logger/SimpleConsoleLogger.h)
 
-set(TEST_FILES
-        test/CharacterManagerTest.cpp
-        test/SimpleKVDevDBTest.cpp
-        test/ItemTest.cpp test/LoopSystemTest.cpp test/SqlKVDatabaseTest.cpp test/UtilSqlCmdTest.cpp test/main.cpp)
-
-# message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
-
-# add_executable(Iris ${LIBS} main.cpp)
 add_library(Iris_Libs ${LIBS})
-add_executable(Iris_Tests test/main.cpp ${TEST_FILES})
-target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} mariadbclientpp mariadbclient)
+add_executable(Iris main.cpp)

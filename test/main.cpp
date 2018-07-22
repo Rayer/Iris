@@ -3,7 +3,7 @@
 //
 
 // Because we uses our own environment, so we need to make our own test main
-#include <stdio.h>
+#include <cstdio>
 #include <Logger/MasterLogger.h>
 #include <Logger/SimpleConsoleLogger.h>
 
@@ -16,9 +16,7 @@ public:
     }
 
     void TearDown() override {
-
     }
-
 };
 
 

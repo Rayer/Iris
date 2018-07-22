@@ -69,9 +69,10 @@ void SqlKVDatabase::wipe(bool force) {
 
 }
 
-SqlKVDatabase::SqlKVDatabase(std::string host, std::string user, std::string pass, std::string database, long port) {
+SqlKVDatabase::SqlKVDatabase(const std::string &host, const std::string &user, const std::string &pass,
+                             const std::string &database, const std::string &unix_socket, long port) {
 
-    m_account_setup = account::create(host, user, pass, database, (u32) port);
+    m_account_setup = account::create(host, user, pass, database, (u32) port, unix_socket);
     m_db = database;
     m_account_setup->set_auto_commit(true);
     m_con = connection::create(m_account_setup);
