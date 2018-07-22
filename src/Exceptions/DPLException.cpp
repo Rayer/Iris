@@ -9,7 +9,7 @@
 using namespace Iris;
 
 
-const char *DPLException::what() const _NOEXCEPT {
+const char *DPLException::what() const noexcept {
     return what_output.c_str();
 }
 

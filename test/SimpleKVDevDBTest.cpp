@@ -164,7 +164,7 @@ TEST_F(SimpleDevDB_Test, SimpleDevDBPersistTest) {
     }
 
     //std::string folder = "/tmp/" + generateRandomString(5, 6);
-    std::string folder = boost::filesystem::complete(boost::filesystem::temp_directory_path()).generic_string() +
+    std::string folder = boost::filesystem::complete(boost::filesystem::temp_directory_path()).generic_string() + "/" +
                          generateRandomString(5, 6);
 
     boost::filesystem::remove(folder);
