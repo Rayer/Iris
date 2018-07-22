@@ -31,7 +31,7 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
         if (result->row_count() == 0) {
             sql_string = (boost::format("CREATE TABLE %1%\n"
                                              "(\n"
-                                             "    `key` varchar(256) PRIMARY KEY NOT NULL,\n"
+                                             "    `key` varchar(128) PRIMARY KEY NOT NULL,\n"
                                              "    value varchar(1024)\n"
                                              ");\n"
                                              "CREATE UNIQUE INDEX %1%_key_uindex ON %1% (`key`);") % name).str();

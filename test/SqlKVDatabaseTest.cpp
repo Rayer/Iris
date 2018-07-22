@@ -58,7 +58,7 @@ protected:
             std::string space_name = generateRandomString(1, 16);
             spaceList.insert(std::make_pair(space_name, dpl->get_space(space_name)));
             //cache[space_name] = SpaceSpec{};
-            logger->trace("Get space : " + space_name);
+            //logger->trace("Get space : " + space_name);
 
             for(std::pair<std::string, std::shared_ptr<KVSpace> > pair : spaceList) {
                 int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
