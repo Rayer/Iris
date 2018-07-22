@@ -6,6 +6,7 @@
 #include <gmock/gmock.h>
 #include <Data/SimpleKVDevDB.h>
 #include <Data/DataPersistenceManager.h>
+#include <Logger/MasterLogger.h>
 
 using namespace Iris;
 
@@ -13,12 +14,14 @@ class SimpleDevDB_Test : public ::testing::Test {
 
 protected:
     KVDataPersistenceLayer *db = nullptr;
+    MasterLogger *logger;
 
 
     void SetUp() override {
         db = DataPersistenceManager::getInstance();
         srand((unsigned int) time(nullptr));
         db->wipe(true);
+
     }
 
     void TearDown() override {

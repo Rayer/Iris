@@ -6,8 +6,7 @@
 #include <gmock/gmock.h>
 #include <Data/DataPersistenceManager.h>
 #include <Data/SqlKVDatabase.h>
-#include <list>
-#include <map>
+#include <Logger/MasterLogger.h>
 
 using namespace Iris;
 
@@ -19,11 +18,13 @@ protected:
     typedef std::map<std::string, KVSpace::ValueType> SpaceSpec;
     typedef std::map<std::string, SpaceSpec> DBSpec;
     DBSpec cache; //This cache is used in stress test case
+    MasterLogger *logger;
 
     SqlKVDatabase_Test() {
         db = new SqlKVDatabase("localhost", "iris", "iris", "iris_test");
         srand((unsigned int) time(nullptr));
         db->wipe(true);
+        logger = MasterLogger::getLogger();
     }
 
     void SetUp() override {
@@ -54,6 +55,7 @@ protected:
             std::string space_name = generateRandomString(1, 16);
             spaceList.insert(std::make_pair(space_name, dpl->get_space(space_name)));
             //cache[space_name] = SpaceSpec{};
+            logger->trace("Get space : " + space_name);
 
             for(std::pair<std::string, std::shared_ptr<KVSpace> > pair : spaceList) {
                 int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
