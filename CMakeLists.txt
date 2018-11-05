@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(Iris)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 enable_testing()
 
 list(INSERT CMAKE_MODULE_PATH 0 "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
@@ -14,7 +14,7 @@ INCLUDE_DIRECTORIES( ${Boost_INCLUDE_DIR} )
 
 FIND_PACKAGE(mysql++ REQUIRED)
 INCLUDE_DIRECTORIES( ${mysql++_INCLUDE_DIR} )
-add_compile_definitions(MYSQLPP_MYSQL_HEADERS_BURIED)
+add_definitions(-DMYSQLPP_MYSQL_HEADERS_BURIED)
 
 # Not yet implemented
 option(GRAPHIC_CLIENT "Build graphic client" OFF)
@@ -74,8 +74,8 @@ set(TEST_FILES
         test/ItemTest.cpp test/LoopSystemTest.cpp test/SqlKVDatabaseTest.cpp test/UtilSqlCmdTest.cpp test/MySqlConnectorBasicTest.cpp)
 
 # message("${Boost_LIBRARIES} ${Boost_LIBRARY_DIR_RELEASE} ${Boost_LIBRARY_DIR_DEBUG} 123")
-
 # add_executable(Iris ${LIBS} main.cpp)
 add_library(Iris_Libs ${LIBS})
 add_executable(Iris_Tests deps/googletest/googletest/src/gtest_main.cc ${TEST_FILES})
-target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES}  mysqlpp)
+target_link_libraries(Iris_Tests gtest Iris_Libs ${Boost_LIBRARIES} ${MYSQLPP_LIBRARIES})
+

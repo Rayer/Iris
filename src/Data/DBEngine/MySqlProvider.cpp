@@ -60,7 +60,7 @@ bool Iris::MySqlQueryResult::go_to_index(int index) {
 }
 
 std::string Iris::MySqlQueryResult::error() {
-    return std::__cxx11::string();
+    return std::string();
 }
 
 Iris::MySqlQueryResult::~MySqlQueryResult() {

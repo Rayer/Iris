@@ -24,8 +24,8 @@ protected:
 };
 
 TEST_F(MySqlConnectorBasicTest, QueryTest) {
-    QueryResult result = db->query("select * from XS");
-    for(int i = 0; i < result->row_count(); ++i) {
+    QueryResult result = db->query("select * from al");
+    do {
         cout << "Key : " << result->get_column("key") << " value : " << result->get_column("value") << endl;
-    }
+    }while(result->next());
 }
