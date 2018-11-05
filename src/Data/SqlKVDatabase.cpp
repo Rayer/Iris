@@ -6,11 +6,10 @@
 #include "SqlKVDatabaseSpace.h"
 #include <boost/format.hpp>
 #include <Exceptions/SqlException.h>
-#include <mariadb++/exceptions.hpp>
 #include "Utils/SqlCmd.h"
+#include "DBEngine/MySqlProvider.h"
 
 using namespace Iris;
-using namespace mariadb;
 using namespace where_clause;
 
 std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
@@ -26,7 +25,8 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
             Eq("table_schema", m_db) & Eq("table_name", name)).generate();
 
     try {
-        result_set_ref result = m_con->query(sql_string);
+        //result_set_ref result = m_con->query(sql_string);
+        QueryResult result = db->query(sql_string);
 
         if (result->row_count() == 0) {
             sql_string = (boost::format("CREATE TABLE %1%\n"
@@ -35,19 +35,15 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
                                              "    value varchar(1024)\n"
                                              ");\n"
                                              "CREATE UNIQUE INDEX %1%_key_uindex ON %1% (`key`);") % name).str();
-            if (m_con->execute(sql_string) == 0xffffffff) throw SqlException{"Fail to create in get_space", sql_string, m_con->error()};
+            ExecuteResult exec_result = db->execute(sql_string);
+            if (!exec_result) throw SqlException{"Fail to create in get_space", sql_string, exec_result->error()};
         }
 
-        std::shared_ptr<KVSpace> space = std::make_shared<SqlKVDatabaseSpace>(name, m_con);
+        std::shared_ptr<KVSpace> space = std::make_shared<SqlKVDatabaseSpace>(name, db);
         m_space_map.insert(std::make_pair(name, space));
 
         return space;
-    } catch(mariadb::exception::base& ex) {
-
-        //wrap up as DPL/SQL exceptions
-        throw SqlException{ex, "set_value", sql_string, m_con->error()};
-
-    } catch(Iris::DPLException& dpl) {
+    }  catch(Iris::DPLException& dpl) {
         throw dpl;
     }
 
@@ -60,24 +56,20 @@ void SqlKVDatabase::wipe(bool force) {
     std::string sql_String = SqlQuery("information_schema.tables").addQuery("TABLE_NAME").where(
             Eq("table_schema", m_db)).generate();
 
-    result_set_ref result = m_con->query(sql_String);
+    QueryResult result = db->query(sql_String);
 
     while (result->next()) {
-        m_con->execute((boost::format("drop table %1%;") % result->get_string("TABLE_NAME")).str());
+        db->execute((boost::format("drop table %1%;") % result->get_column("TABLE_NAME")).str());
     }
 
 
 }
 
-SqlKVDatabase::SqlKVDatabase(std::string host, std::string user, std::string pass, std::string database, long port) {
-
-    m_account_setup = account::create(host, user, pass, database, (u32) port);
-    m_db = database;
-    m_account_setup->set_auto_commit(true);
-    m_con = connection::create(m_account_setup);
-    if (!m_con->connect()) throw SqlException{"Fail to initial SqlDataBase!", "", m_con->error()};
+SqlKVDatabase::SqlKVDatabase(const std::string &host, const std::string &user, const std::string &pass,
+                             const std::string &database, long port) {
+    db = new MySqlProvider();
 }
 
 SqlKVDatabase::~SqlKVDatabase() {
-    if (m_con) m_con->disconnect();
+    if (db) db->cleanup();
 }

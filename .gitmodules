@@ -4,9 +4,3 @@
 [submodule "deps/cocos2d-x"]
 	path = deps/cocos2d-x
 	url = https://github.com/cocos2d/cocos2d-x
-[submodule "deps/mariadbpp"]
-	path = deps/mariadbpp
-	url = git@github.com:Rayer/mariadbpp.git
-[submodule "deps/mariadb-connector-c"]
-	path = deps/mariadb-connector-c
-	url = git@github.com:MariaDB/mariadb-connector-c.git

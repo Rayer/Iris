@@ -8,6 +8,7 @@
 #include <Data/SqlKVDatabase.h>
 #include <list>
 #include <map>
+#include <cstring>
 
 using namespace Iris;
 

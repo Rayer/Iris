@@ -6,16 +6,18 @@
 #define IRIS_SQLDATABASESPACE_H
 
 #include "KVSpace.h"
-#include <mariadb++/connection.hpp>
+#include <map>
+#include "DBEngine/IDBEngineProvider.h"
 
 namespace Iris {
     class SqlKVDatabaseSpace : public KVSpace {
     private:
         std::map<std::string, ValueType> map;
         std::string space_name;
-        mariadb::connection_ref sql_connect;
+        IDBEngineProvider* sql_connect;
+
     public:
-        SqlKVDatabaseSpace(const std::string &name, mariadb::connection_ref conn);
+        SqlKVDatabaseSpace(const std::string &name, IDBEngineProvider *conn);
 
         ValueType get_value(const std::string &key) override;
 

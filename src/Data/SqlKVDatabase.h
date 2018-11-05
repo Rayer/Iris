@@ -6,18 +6,19 @@
 #define IRIS_SQLDATABASE_H
 
 #include "KVDataPersistenceLayer.h"
-#include <mariadb++/connection.hpp>
+#include "DBEngine/IDBEngineProvider.h"
+#include <map>
 
 namespace Iris {
     class SqlKVDatabase : public KVDataPersistenceLayer {
 
-        mariadb::account_ref m_account_setup;
+        IDBEngineProvider* db;
         std::string m_db;
-        mariadb::connection_ref m_con;
         std::map<std::string, std::shared_ptr<KVSpace> > m_space_map;
 
     public:
-        SqlKVDatabase(std::string host, std::string user, std::string pass, std::string database, long port = 3306);
+        SqlKVDatabase(const std::string &host, const std::string &user, const std::string &pass,
+                      const std::string &database, long port = 3306);
 
         ~SqlKVDatabase() override;
 
