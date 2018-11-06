@@ -29,24 +29,24 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
         QueryResult result = db->query(sql_string);
 
         if (result->row_count() == 0) {
-            sql_string = (boost::format("CREATE TABLE %1%\n"
-                                             "(\n"
-                                             "    `key` varchar(256) PRIMARY KEY NOT NULL,\n"
-                                             "    value varchar(1024)\n"
-                                             ");\n"
-                                             "CREATE UNIQUE INDEX %1%_key_uindex ON %1% (`key`);") % name).str();
+            sql_string = (boost::format("CREATE TABLE %1% "
+                                        "( "
+                                        "    `key` varchar(64) PRIMARY KEY NOT NULL, "
+                                        "    value varchar(128) "
+                                        "); ") % name).str();
             ExecuteResult exec_result = db->execute(sql_string);
-            if (!exec_result) throw SqlException{"Fail to create in get_space", sql_string, exec_result->error()};
+            sql_string = (boost::format("CREATE UNIQUE INDEX %1%_key_uindex ON %1% (`key`);") % name).str();
+            db->execute(sql_string);
+
         }
 
         std::shared_ptr<KVSpace> space = std::make_shared<SqlKVDatabaseSpace>(name, db);
         m_space_map.insert(std::make_pair(name, space));
 
         return space;
-    }  catch(Iris::DPLException& dpl) {
-        throw dpl;
+    } catch (const std::exception &e) {
+        throw SqlException{"Fail to create in get_space", sql_string, e.what()};
     }
-
 }
 
 void SqlKVDatabase::wipe(bool force) {

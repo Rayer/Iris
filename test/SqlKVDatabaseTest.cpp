@@ -55,8 +55,9 @@ protected:
             std::string space_name = generateRandomString(1, 16);
             spaceList.insert(std::make_pair(space_name, dpl->get_space(space_name)));
             //cache[space_name] = SpaceSpec{};
-
+            std::cout << "Round : " << i << std::endl;
             for(std::pair<std::string, std::shared_ptr<KVSpace> > pair : spaceList) {
+
                 int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
                 for(int j = 0; j < space_size; ++j) {
                     std::string column_name = generateRandomString(1, 10);
