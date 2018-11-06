@@ -20,9 +20,9 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
 
     //std::string sql_string = (
     //        boost::format("select 1 from information_schema.tables where table_schema='%1%' and table_name='%2%';") %
-    //        m_db % name).str();
+    //        m_dbName % name).str();
     std::string sql_string = SqlQuery("information_schema.tables").addQuery("1").where(
-            Eq("table_schema", m_db) & Eq("table_name", name)).generate();
+            Eq("table_schema", m_dbName) & Eq("table_name", name)).generate();
 
     try {
         //result_set_ref result = m_con->query(sql_string);
@@ -52,14 +52,14 @@ std::shared_ptr<KVSpace> SqlKVDatabase::get_space(const std::string &name) {
 void SqlKVDatabase::wipe(bool force) {
     //TODO: Dangerous operation, need a WARN log
     //std::string sql_String = (
-    //        boost::format("select TABLE_NAME from information_schema.tables where table_schema='%1%';") % m_db).str();
+    //        boost::format("select TABLE_NAME from information_schema.tables where table_schema='%1%';") % m_dbName).str();
     std::string sql_String = SqlQuery("information_schema.tables").addQuery("TABLE_NAME").where(
-            Eq("table_schema", m_db)).generate();
+            Eq("table_schema", m_dbName)).generate();
 
     QueryResult result = db->query(sql_String);
 
     while (result->next()) {
-        db->execute((boost::format("drop table %1%;") % result->get_column("TABLE_NAME")).str());
+        db->execute((boost::format("drop table if exists %1%;") % result->get_column("TABLE_NAME")).str());
     }
 
 
@@ -68,6 +68,8 @@ void SqlKVDatabase::wipe(bool force) {
 SqlKVDatabase::SqlKVDatabase(const std::string &host, const std::string &user, const std::string &pass,
                              const std::string &database, long port) {
     db = new MySqlProvider();
+    db->connect(host, user, pass, "iris_test");
+    m_dbName = "iris_test";
 }
 
 SqlKVDatabase::~SqlKVDatabase() {

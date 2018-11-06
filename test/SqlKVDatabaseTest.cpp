@@ -22,7 +22,7 @@ protected:
     DBSpec cache; //This cache is used in stress test case
 
     SqlKVDatabase_Test() {
-        db = new SqlKVDatabase("localhost", "iris", "iris", "iris_test");
+        db = new SqlKVDatabase("node.rayer.idv.tw", "iris", "iris", "iris_test");
         srand((unsigned int) time(nullptr));
         db->wipe(true);
     }

@@ -13,7 +13,7 @@ namespace Iris {
     class SqlKVDatabase : public KVDataPersistenceLayer {
 
         IDBEngineProvider* db;
-        std::string m_db;
+        std::string m_dbName;
         std::map<std::string, std::shared_ptr<KVSpace> > m_space_map;
 
     public:

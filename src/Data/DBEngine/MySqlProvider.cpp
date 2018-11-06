@@ -1,3 +1,5 @@
+#include <utility>
+
 //
 // Created by CORP\rayer on 10/31/18.
 //
@@ -20,7 +22,8 @@ std::shared_ptr<Iris::IQueryResult> Iris::MySqlProvider::query(const std::string
 }
 
 std::shared_ptr<Iris::IExecuteResult> Iris::MySqlProvider::execute(const std::string &sql) {
-    return std::shared_ptr<IExecuteResult>();
+    mysqlpp::SimpleResult result = conn->query(sql.c_str()).execute();
+    return std::make_shared<MySqlExecuteResult>(result);
 }
 
 void Iris::MySqlProvider::cleanup() {
@@ -67,7 +70,22 @@ Iris::MySqlQueryResult::~MySqlQueryResult() {
 
 }
 
-Iris::MySqlQueryResult::MySqlQueryResult(mysqlpp::StoreQueryResult result) : IQueryResult(), queryResult(result) {
+Iris::MySqlQueryResult::MySqlQueryResult(mysqlpp::StoreQueryResult result) : IQueryResult(), queryResult(std::move(result)) {
     pos = queryResult.begin();
 }
+
+Iris::MySqlExecuteResult::MySqlExecuteResult(mysqlpp::SimpleResult execResult) : IExecuteResult(), execResult(
+        std::move(execResult)) {
+
+}
+
+bool Iris::MySqlExecuteResult::result() {
+
+    return false;
+}
+
+std::string Iris::MySqlExecuteResult::error() {
+    return std::string();
+}
+
 

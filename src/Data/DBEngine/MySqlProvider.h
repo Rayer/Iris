@@ -47,7 +47,12 @@ namespace Iris {
     };
 
     class MySqlExecuteResult : public IExecuteResult {
+        mysqlpp::SimpleResult execResult;
+    public:
+        MySqlExecuteResult(mysqlpp::SimpleResult execResult);
+        bool result() override;
 
+        std::string error() override;
     };
 }
 
