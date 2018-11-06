@@ -50,7 +50,6 @@ protected:
     void generateStressTestData(KVDataPersistenceLayer* dpl, int space_count = 100, int space_size_min = 1, int space_size_max = 10) {
 
         cache.clear();
-        double delta;
 
         typedef std::chrono::high_resolution_clock time;
         typedef std::chrono::milliseconds ms;
@@ -60,13 +59,10 @@ protected:
 
         std::map<std::string, std::shared_ptr<KVSpace> > spaceList;
         for(int i = 0; i < space_count; ++i) {
-            double delta = std::chrono::duration_cast<std::chrono::duration<double, std::ratio<1>>>(
-                    time::now() - timer).count();
-
             std::string space_name = generateRandomString(1, 16);
             spaceList.insert(std::make_pair(space_name, dpl->get_space(space_name)));
             //cache[space_name] = SpaceSpec{};
-            std::cout << "Round : " << i << "(delta : " << delta * 1000000 << ")" << std::endl;
+
             for(std::pair<std::string, std::shared_ptr<KVSpace> > pair : spaceList) {
 
                 int space_size = rand() % (space_size_max - space_size_min) + space_size_min;
@@ -78,8 +74,9 @@ protected:
                 }
 
             }
+            auto delta = std::chrono::duration_cast<ms>(time::now() - timer).count();
+            std::cout << "Round : " << i << "(delta : " << delta << ")" << std::endl;
             timer = time::now();
-
         }
     }
 };
